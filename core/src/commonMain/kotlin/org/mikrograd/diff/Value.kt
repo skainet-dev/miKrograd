@@ -1,5 +1,7 @@
 package org.mikrograd.diff
 
+import kotlin.math.pow
+
 class Value(var data: Double, private val _children: List<Value> = listOf(), private val _op: String = "") {
     var grad: Double = 0.0
     private var _backward: () -> Unit = {}
@@ -27,9 +29,9 @@ class Value(var data: Double, private val _children: List<Value> = listOf(), pri
     }
 
     infix fun pow(other: Double): Value {
-        val out = Value(Math.pow(data, other), listOf(this), "**$other")
+        val out = Value(data.pow(other), listOf(this), "**$other")
         out._backward = {
-            this.grad += (other * Math.pow(data, other - 1)) * out.grad
+            this.grad += (other * data.pow(other - 1)) * out.grad
         }
         return out
     }

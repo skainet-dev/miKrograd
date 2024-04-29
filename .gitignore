@@ -3,3 +3,9 @@
 .kotlin
 build/
 .idea
+__pycache__
+.data_cache
+.ipynb_checkpoints
+
+
+

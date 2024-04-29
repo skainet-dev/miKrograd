@@ -1,4 +1,3 @@
-rootProject.name = "miKrograd"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -19,4 +18,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":miKrograd-core")
+include(":core")
+include(":gguf")
