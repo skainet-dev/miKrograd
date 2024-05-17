@@ -1,6 +1,6 @@
 # miKrograd
 
-This project is an attempt to port of [a tiny scalar-valued autograd engine and a neural net library on top of it with PyTorch-like API](https://github.com/karpathy/micrograd) by Andrej Karpathy into Kotlin multiplatform.
+This project is an attempt to port micrograd - [a tiny scalar-valued autograd engine and a neural net library on top of it with PyTorch-like API](https://github.com/karpathy/micrograd) by Andrej Karpathy into Kotlin multiplatform.
 
 ### Example usage
 
