@@ -1,22 +1,10 @@
 # miKrograd
 
-This project is an attempt to port of [a tiny scalar-valued autograd engine and a neural net library on top of it with PyTorch-like API ]([https://pages.github.com/](https://github.com/karpathy/micrograd)) by Andrej Karpathy into Kotlin multiplatform.
-
-# micrograd
-
-![awww](puppy.jpg)
-
-A tiny Autograd engine (with a bite! :)). Implements backpropagation (reverse-mode autodiff) over a dynamically built DAG and a small neural networks library on top of it with a PyTorch-like API. Both are tiny, with about 100 and 50 lines of code respectively. The DAG only operates over scalar values, so e.g. we chop up each neuron into all of its individual tiny adds and multiplies. However, this is enough to build up entire deep neural nets doing binary classification, as the demo notebook shows. Potentially useful for educational purposes.
-
-### Installation
-
-```bash
-pip install micrograd
-```
+This project is an attempt to port of [a tiny scalar-valued autograd engine and a neural net library on top of it with PyTorch-like API](https://github.com/karpathy/micrograd) by Andrej Karpathy into Kotlin multiplatform.
 
 ### Example usage
 
-Below is a slightly contrived example showing a number of possible supported operations:
+Below is a Kotlin, what we want to achive. Its a contrived example showing a number of possible supported operations:
 
 ```kotlin
 import mikrograd.engine.Value
