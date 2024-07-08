@@ -1,12 +1,13 @@
 [versions]
-compose-plugin = "1.6.2"
-junit = "4.13.2"
-kotlin = "2.0.0-RC1"
-kotlinx-coroutines = "1.8.0"
+
+kotlin = "2.0.0"
+ksp = "2.0.0-1.0.21"
+kotlinx-coroutines = "1.8.1"
+kotlinx-serialization = "1.6.3"
+kotlinx-dateTime = "0.6.0"
 kotlinx-io = "0.3.3"
-kmpNativeCoroutines = "1.0.0-ALPHA-28-kotlin-2.0.0-RC1"
-kmmViewModel = "1.0.0-ALPHA-20-kotlin-2.0.0-RC1"
-ksp = "2.0.0-RC1-1.0.20"
+multik = "0.2.3"
+junit = "4.13.2"
 
 
 [libraries]
@@ -14,16 +15,15 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
+multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref = "multik" }
+
 
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
-kmmViewModel = { group = "com.rickclephas.kmm", name = "kmm-viewmodel-core", version.ref = "kmmViewModel" }
 
 
 [plugins]
-jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kmpNativeCoroutines = { id = "com.rickclephas.kmp.nativecoroutines", version.ref = "kmpNativeCoroutines" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
