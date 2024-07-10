@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 include(":core")
 include(":gguf")
 include(":dot-poet")
+include(":samples")

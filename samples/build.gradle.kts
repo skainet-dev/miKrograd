@@ -1,0 +1,37 @@
+plugins {
+    alias(libs.plugins.kotlinMultiplatform)
+}
+
+
+group = "org.mikrograd.samples"
+
+kotlin {
+
+    compilerOptions {
+        // Common compiler options applied to all Kotlin source sets
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.add("-Xmulti-platform")
+    }
+
+    jvmToolchain(17)
+
+    jvm()
+
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(kotlin("stdlib-common"))
+            implementation(project(":core"))
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test-common"))
+            implementation(kotlin("test-annotations-common"))
+        }
+
+
+        jvmTest.dependencies {
+            implementation(kotlin("test-junit"))
+        }
+    }
+}

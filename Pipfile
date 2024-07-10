@@ -8,6 +8,12 @@ numpy = "*"
 torch = "*"
 gguf = "*"
 pytest = "*"
+jupyterlab = "*"
+ipykernel = "*"
+jupyter = "*"
+torchsummary = "*"
+matplotlib = "*"
+scikit-learn = "*"
 
 [requires]
 python_version = "3.8"

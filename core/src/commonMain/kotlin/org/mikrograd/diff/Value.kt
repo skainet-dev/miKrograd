@@ -68,6 +68,8 @@ class Value(var data: Double, private val _children: List<Value> = listOf(), pri
 
     operator fun div(other: Value) = this * (other pow -1.0)
 
+    operator fun div(other: Int) = this.div(Value(other.toDouble()))
+
     override fun toString(): String = "Value(data=$data, grad=$grad)"
 }
 
