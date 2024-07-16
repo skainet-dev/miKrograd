@@ -29,6 +29,9 @@ println("${a.grad}") // prints 138.8338, i.e. the numerical value of dg/da
 println("${b.grad}") // prints 645.5773, i.e. the numerical value of dg/db```
 ```
 
+Vizualized DAG
+![DAG](dag.png)
+
 ### License
 
 MIT
