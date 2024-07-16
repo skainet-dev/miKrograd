@@ -4,27 +4,29 @@ This project is an attempt to port micrograd - [a tiny scalar-valued autograd en
 
 ### Example usage
 
-Below is a Kotlin, what we want to achive. Its a contrived example showing a number of possible supported operations:
+Below is already running Kotlin code. Its a contrived example showing a number of possible supported operations:
 
 ```kotlin
-import mikrograd.engine.Value
+import org.mikrograd.diff.Value
+import org.mikrograd.diff.div
+import org.mikrograd.diff.plus
 
 val a = Value(-4.0)
 val b = Value(2.0)
-val c = a + b
-val d = a * b + b**3
-val c += c + 1
-val c += 1 + c + (-a)
-val d += d * 2 + (b + a).relu()
-val d += 3 * d + (b - a).relu()
+var c = a + b
+var d = a * b + b.pow(3.0)
+c += c + 1
+c += 1.0 + c + (-a)
+d += d * 2 + (b + a).relu()
+d += d * 3.0 + (b - a).relu()
 val e = c - d
-val f = e**2
-val g = f / 2.0f
-val g += 10.0 / f
-print("${g.data:.4f}') // prints 24.7041, the outcome of this forward pass
+val f = e.pow(2.0)
+var g = f / 2
+g += 10.0 / f
+println("$g")  // prints 24.7041, the outcome of this forward pass
 g.backward()
-print("${a.grad:.4f}") // prints 138.8338, i.e. the numerical value of dg/da
-print("${b.grad:.4f}") // prints 645.5773, i.e. the numerical value of dg/db
+println("${a.grad}") // prints 138.8338, i.e. the numerical value of dg/da
+println("${b.grad}") // prints 645.5773, i.e. the numerical value of dg/db```
 ```
 
 ### License
