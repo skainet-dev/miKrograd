@@ -22,6 +22,7 @@ kotlin {
         commonMain.dependencies {
             implementation(kotlin("stdlib-common"))
             implementation(project(":core"))
+            implementation(project(":dot-poet"))
         }
 
         commonTest.dependencies {
