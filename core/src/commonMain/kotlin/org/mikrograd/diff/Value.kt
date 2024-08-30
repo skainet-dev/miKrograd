@@ -2,16 +2,27 @@ package org.mikrograd.diff
 
 import kotlin.math.pow
 
-class Value(var data: Double, private val _children: List<Value> = listOf(), private val _op: String = "") {
+class Value(
+    var data: Double,
+    val _children: List<Value> = listOf(),
+    private val _op: String = "",
+    var label: String = ""
+) {
     var grad: Double = 0.0
     private var _backward: () -> Unit = {}
+
+    val children: List<Value>
+        get() = _children
+
+    val op: String
+        get() = _op
 
     init {
         _backward = { }
     }
 
     operator fun plus(other: Value): Value {
-        val out = Value(data + other.data, listOf(this, other), "+")
+        val out = Value(data + other.data, listOf(this, other), "+", label = "")
         out._backward = {
             this.grad += out.grad
             other.grad += out.grad
@@ -20,7 +31,7 @@ class Value(var data: Double, private val _children: List<Value> = listOf(), pri
     }
 
     operator fun times(other: Value): Value {
-        val out = Value(data * other.data, listOf(this, other), "*")
+        val out = Value(data * other.data, listOf(this, other), "*", label = "")
         out._backward = {
             this.grad += other.data * out.grad
             other.grad += this.data * out.grad
@@ -29,7 +40,15 @@ class Value(var data: Double, private val _children: List<Value> = listOf(), pri
     }
 
     infix fun pow(other: Double): Value {
-        val out = Value(data.pow(other), listOf(this), "**$other")
+        val out = Value(data.pow(other), listOf(this), "^$other")
+        out._backward = {
+            this.grad += (other * data.pow(other - 1)) * out.grad
+        }
+        return out
+    }
+
+    infix fun div(other: Double): Value {
+        val out = Value(data / other, listOf(this), "/")
         out._backward = {
             this.grad += (other * data.pow(other - 1)) * out.grad
         }
@@ -37,9 +56,13 @@ class Value(var data: Double, private val _children: List<Value> = listOf(), pri
     }
 
     fun relu(): Value {
-        val out = Value(if (data < 0) 0.0 else data, listOf(this), "ReLU")
+        val out = Value(if (data < 0) 0.0 else data, listOf(this), "ReLU", label = "Relu(${this.label})")
         out._backward = {
-            if (data > 0) this.grad += out.grad
+            if (data > 0) {
+                this.grad += out.grad
+            } else {
+                this.grad = 0.0
+            }
         }
         return out
     }
@@ -59,22 +82,29 @@ class Value(var data: Double, private val _children: List<Value> = listOf(), pri
         buildTopo(this)
 
         grad = 1.0
-        topo.asReversed().forEach { it._backward() }
+        val reversed = topo.asReversed()
+        reversed.forEach { it._backward() }
     }
 
-    operator fun unaryMinus() = this.times(Value(-1.0))
+    operator fun unaryMinus() = this.times(Value(-1.0, _op = ""))
 
     operator fun minus(other: Value) = this + (-other)
+    operator fun plus(other: Int) = this + Value(other.toDouble(), _op = "+")
 
-    operator fun div(other: Value) = this * (other pow -1.0)
+    operator fun div(other: Value) = this.div(other.data)
 
-    operator fun div(other: Int) = this.div(Value(other.toDouble()))
+    operator fun times(other: Int) = this.times(Value(other.toDouble(), _op = "*"))
 
-    override fun toString(): String = "Value(data=$data, grad=$grad)"
+    operator fun times(other: Double) = this.times(Value(other, _op = "*"))
+
+    operator fun div(other: Int) = this.div(Value(other.toDouble(), _op = "/"))
+
+    override fun toString(): String = "Value(data=$data, grad=$grad, op=$_op, label='$label')"
 }
 
 // Extension functions for Double to seamlessly interact with Value instances
-operator fun Double.plus(value: Value): Value = Value(this) + value
-operator fun Double.times(value: Value): Value = Value(this) * value
-operator fun Double.minus(value: Value): Value = Value(this) - value
-operator fun Double.div(value: Value): Value = Value(this) / value
+operator fun Int.plus(value: Value): Value = Value(this.toDouble(), _op = "") + value
+operator fun Double.plus(value: Value): Value = Value(this, _op = "") + value
+operator fun Double.times(value: Value): Value = Value(this, _op = "") * value
+operator fun Double.minus(value: Value): Value = Value(this, _op = "") - value
+operator fun Double.div(value: Value): Value = Value(this, _op = "") / value
