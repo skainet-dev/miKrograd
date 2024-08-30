@@ -1,7 +1,10 @@
 package org.markup.dot
 
+import java.io.File
+
 // Define the data classes with rendering functions
 data class Graph(
+    val rankdir: String? = null,
     val name: String? = null,
     val directed: Boolean = false,
     val nodes: MutableList<Node> = mutableListOf(),
@@ -9,10 +12,16 @@ data class Graph(
 ) {
     fun render(): String {
         val graphType = if (directed) "digraph" else "graph"
+        val rankdirAttr = rankdir?.let { "rankdir=\"$it\"; \n" } ?: ""
         val namePart = name?.let { "$graphType $it" } ?: graphType
+
         val nodesPart = nodes.joinToString("\n") { it.render() }
         val edgesPart = edges.joinToString("\n") { it.render(directed) }
-        return "$namePart {\n$nodesPart\n$edgesPart\n}"
+        return "$namePart {\n$rankdirAttr\n$nodesPart\n$edgesPart\n}"
+    }
+
+    fun toFile(name: String) {
+        File(name).writeText(render())
     }
 }
 
@@ -31,20 +40,22 @@ data class Edge(val from: Node, val to: Node, val style: EdgeStyle? = null) {
     }
 }
 
-data class NodeStyle(val shape: String? = null, val color: String? = null) {
+data class NodeStyle(val shape: String? = null, val color: String? = null, val label: String? = null) {
     fun render(): String {
         val attributes = mutableListOf<String>()
         shape?.let { attributes.add("shape=\"$it\"") }
         color?.let { attributes.add("color=\"$it\"") }
+        label?.let { attributes.add("label=\"$it\"") }
         return attributes.joinToString(", ")
     }
 }
 
-data class EdgeStyle(val style: String? = null, val color: String? = null) {
+data class EdgeStyle(val style: String? = null, val color: String? = null, val label: String? = null) {
     fun render(): String {
         val attributes = mutableListOf<String>()
         style?.let { attributes.add("style=\"$it\"") }
         color?.let { attributes.add("color=\"$it\"") }
+        label?.let { attributes.add("label=\"$it\"") }
         return attributes.joinToString(", ")
     }
 }
@@ -56,8 +67,15 @@ class GraphBuilder {
     private val nodes = mutableListOf<Node>()
     private val edges = mutableListOf<Edge>()
 
+    private var rankdir: String? = null
+
+
     fun name(name: String) {
         this.name = name
+    }
+
+    fun rankdir(rankdir: String) {
+        this.rankdir = rankdir
     }
 
     fun directed() {
@@ -81,16 +99,21 @@ class GraphBuilder {
     }
 
     fun build(): Graph {
-        return Graph(name, directed, nodes, edges)
+        return Graph(rankdir = rankdir, name = name, directed = directed, nodes = nodes, edges = edges)
     }
 }
 
 class NodeBuilder(private val id: String) {
     private var shape: String? = null
     private var color: String? = null
+    private var label: String? = null
 
     fun shape(shape: String) {
         this.shape = shape
+    }
+
+    fun label(label: String) {
+        this.label = label
     }
 
     fun color(color: String) {
@@ -98,32 +121,35 @@ class NodeBuilder(private val id: String) {
     }
 
     fun build(): Node {
-        return Node(id, NodeStyle(shape, color))
+        return Node(id, NodeStyle(shape, color, label))
     }
 }
 
 class EdgeBuilder(private val from: Node, private val to: Node) {
     private var style: String? = null
     private var color: String? = null
+    private var label: String? = null
+
 
     fun style(style: String) {
         this.style = style
     }
+
+    fun label(label: String) {
+        this.label = label
+    }
+
 
     fun color(color: String) {
         this.color = color
     }
 
     fun build(): Edge {
-        return Edge(from, to, EdgeStyle(style, color))
+        return Edge(from, to, EdgeStyle(style, color, label))
     }
 }
 
 // Extension functions for more readable DSL
 fun graph(init: GraphBuilder.() -> Unit): Graph {
     return GraphBuilder().apply(init).build()
-}
-
-fun GraphBuilder.edge(from: NodeBuilder, to: NodeBuilder) {
-    edge(from.build().id, to.build().id)
 }
