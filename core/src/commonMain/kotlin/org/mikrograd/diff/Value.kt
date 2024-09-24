@@ -1,5 +1,6 @@
 package org.mikrograd.diff
 
+import kotlin.math.exp
 import kotlin.math.pow
 
 class Value(
@@ -66,6 +67,25 @@ class Value(
         }
         return out
     }
+
+    fun tanh(): Value {
+        val t = (exp(2 * data) - 1) / (exp(2 * data) + 1)
+        val out = Value(t, listOf(this), "tanh", label = "tanh(${this.label})")
+        out._backward = {
+            this.grad += (1 - t * t) * out.grad
+        }
+        return out
+    }
+
+    fun sigmoid(): Value {
+        val out = Value(1.0 / (1.0 + kotlin.math.exp(-data)), listOf(this), "sigmoid", label = "sigmoid(${this.label})")
+        out._backward = {
+            val s = 1.0 / (1.0 + kotlin.math.exp(-data))
+            this.grad = s * (1.0 - s)
+        }
+        return out
+    }
+
 
     fun backward() {
         val topo = mutableListOf<Value>()
