@@ -48,14 +48,6 @@ class Value(
         return out
     }
 
-    infix fun div(other: Double): Value {
-        val out = Value(data / other, listOf(this), "/")
-        out._backward = {
-            this.grad += (other * data.pow(other - 1)) * out.grad
-        }
-        return out
-    }
-
     fun relu(): Value {
         val out = Value(if (data < 0) 0.0 else data, listOf(this), "ReLU", label = "Relu(${this.label})")
         out._backward = {
@@ -111,13 +103,14 @@ class Value(
     operator fun minus(other: Value) = this + (-other)
     operator fun plus(other: Int) = this + Value(other.toDouble(), _op = "+")
 
-    operator fun div(other: Value) = this.div(other.data)
+    operator fun div(other: Int) = this * Value(other.toDouble()).pow(-1.0)
+    operator fun div(other: Double) = this * Value(other).pow(-1.0)
+    operator fun div(other: Value) = this * other.pow(-1.0)
 
     operator fun times(other: Int) = this.times(Value(other.toDouble(), _op = "*"))
 
     operator fun times(other: Double) = this.times(Value(other, _op = "*"))
 
-    operator fun div(other: Int) = this.div(Value(other.toDouble(), _op = "/"))
 
     override fun toString(): String = "Value(data=$data, grad=$grad, op=$_op, label='$label')"
 }
@@ -125,6 +118,13 @@ class Value(
 // Extension functions for Double to seamlessly interact with Value instances
 operator fun Int.plus(value: Value): Value = Value(this.toDouble(), _op = "") + value
 operator fun Double.plus(value: Value): Value = Value(this, _op = "") + value
+
+operator fun Int.times(value: Value): Value = Value(this.toDouble(), _op = "") * value
 operator fun Double.times(value: Value): Value = Value(this, _op = "") * value
+
+operator fun Int.minus(value: Value): Value = Value(this.toDouble(), _op = "") - value
 operator fun Double.minus(value: Value): Value = Value(this, _op = "") - value
+
+
+operator fun Int.div(value: Value): Value = Value(this.toDouble(), _op = "") / value
 operator fun Double.div(value: Value): Value = Value(this, _op = "") / value
