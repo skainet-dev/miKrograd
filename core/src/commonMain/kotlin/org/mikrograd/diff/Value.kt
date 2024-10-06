@@ -70,10 +70,9 @@ class Value(
     }
 
     fun sigmoid(): Value {
-        val out = Value(1.0 / (1.0 + kotlin.math.exp(-data)), listOf(this), "sigmoid", label = "sigmoid(${this.label})")
+        val out = Value(1.0 / (1.0 + exp(-data)), listOf(this), "sigmoid", label = "sigmoid(${this.label})")
         out._backward = {
-            val s = 1.0 / (1.0 + kotlin.math.exp(-data))
-            this.grad = s * (1.0 - s)
+            this.grad = out.data * (1.0 - out.data)
         }
         return out
     }
