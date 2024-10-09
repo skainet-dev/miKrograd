@@ -6,7 +6,7 @@ import org.mikrograd.utils.drawDot
 
 fun main() {
     val neuralNetwork = Neuron(2)
-    parameters
+    //parameters
     val x = listOf(Value(1.0), Value(-2.0))
     val y = neuralNetwork(x)
     drawDot(y).toFile("neuron.png")
