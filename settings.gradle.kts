@@ -18,6 +18,8 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("compiler-plugin-template")
+
 include(":core")
 include(":gguf")
 include(":dot-poet")

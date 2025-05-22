@@ -2,6 +2,7 @@
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    id("org.mikrograd.simpleplugin")
 }
 
 
